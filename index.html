@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>守成クラブ 公式LINE モック</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--g:#06C755;--gd:#05663b;--ink:#1f2933;--mut:#8a95a3;--line:#e6ebf2;--bg:#eef1f5}
+  body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;padding:26px 14px 60px}
+  .wrap{max-width:960px;margin:0 auto}
+  .lead{text-align:center;margin-bottom:22px}
+  .lead h1{font-size:19px;color:#0f2540;font-weight:800}
+  .lead p{font-size:12.5px;color:#6b7785;margin-top:5px}
+  .switch{display:flex;gap:8px;justify-content:center;margin:14px 0 26px}
+  .switch button{border:1.5px solid var(--line);background:#fff;color:#5a6775;font-weight:700;font-size:13px;padding:9px 20px;border-radius:99px;cursor:pointer}
+  .switch button.on{background:var(--g);border-color:var(--g);color:#fff}
+  .views{display:flex;gap:36px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+
+  /* ===== phone ===== */
+  .phone{width:360px;background:#fff;border-radius:42px;border:12px solid #10151c;overflow:hidden;box-shadow:0 20px 55px rgba(10,20,40,.28);position:relative}
+  .notch{height:24px;background:#10151c}
+  .topbar{background:var(--g);color:#fff;padding:12px 14px;display:flex;align-items:center;gap:10px;min-height:58px}
+  .topbar .back{font-size:22px;cursor:pointer;width:22px;visibility:hidden}
+  .topbar .back.show{visibility:visible}
+  .topbar .avatar{width:34px;height:34px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px}
+  .topbar .t{font-size:15px;font-weight:700;line-height:1.2}
+  .topbar .s{font-size:10.5px;opacity:.9}
+  .screen{height:560px;overflow-y:auto;background:#f6f8fb}
+  .pad{padding:16px}
+
+  /* home */
+  .chatbg{background:#8caadd;padding:16px 12px 20px}
+  .bubble{background:#fff;border-radius:4px 15px 15px 15px;padding:11px 13px;max-width:82%;font-size:12.5px;line-height:1.6;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+  .bubble b{color:var(--gd)}
+  .menulabel{background:#f3f5f8;border-top:1px solid var(--line);font-size:10.5px;color:var(--mut);text-align:center;padding:6px 0;font-weight:700}
+  .rich{display:grid;grid-template-columns:repeat(3,1fr);background:#dfe4ec;gap:1.5px}
+  .tile{background:#fff;aspect-ratio:1/.9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:background .12s}
+  .tile:active{background:#eef7f1}
+  .tile.hot{background:var(--g)}
+  .tile.hot .ic,.tile.hot .lb{color:#fff}
+  .tile .ic{font-size:25px}
+  .tile .lb{font-size:11px;font-weight:700;text-align:center;line-height:1.25;color:#2c3742}
+
+  /* generic screen */
+  .scr-title{font-size:16px;font-weight:800;color:#0f2540;margin-bottom:3px}
+  .scr-sub{font-size:11.5px;color:var(--mut);margin-bottom:16px;line-height:1.5}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:13px;box-shadow:0 3px 10px rgba(20,40,80,.04)}
+  .card .date{font-size:13.5px;font-weight:800;color:#0f2540}
+  .card .meta{font-size:11.5px;color:#6b7785;margin-top:4px;line-height:1.6}
+  .seg-row{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+  .seg-row .k{font-size:12px;font-weight:700;color:#3c4a58}
+  .seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{border:none;background:#fff;font-size:12px;font-weight:700;color:#8a95a3;padding:7px 15px;cursor:pointer}
+  .seg button.pick-y{background:var(--g);color:#fff}
+  .seg button.pick-n{background:#eef1f5;color:#41505f}
+  .saved{margin-top:11px;font-size:11px;font-weight:800;color:var(--gd);background:#e7f9ef;padding:6px 10px;border-radius:8px;display:none}
+  .saved.show{display:block}
+
+  .field{margin-bottom:13px}
+  .field label{display:block;font-size:12px;font-weight:700;color:#3c4a58;margin-bottom:5px}
+  .field input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px;font-size:14px}
+  .btn{width:100%;background:var(--g);color:#fff;border:none;border-radius:11px;padding:13px;font-size:14px;font-weight:800;cursor:pointer}
+  .btn.sub{background:#fff;color:var(--gd);border:1.5px solid var(--g)}
+  .hint{font-size:11px;color:var(--mut);margin-top:10px;line-height:1.6}
+
+  .mlist .mrow{display:flex;align-items:center;gap:11px;padding:12px 4px;border-bottom:1px solid var(--line)}
+  .mlist .mrow .ava{width:38px;height:38px;border-radius:50%;background:#e7f9ef;color:var(--gd);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:none}
+  .mlist .mrow .nm{font-size:13px;font-weight:700}
+  .mlist .mrow .co{font-size:11px;color:var(--mut)}
+  .lock{text-align:center;padding:40px 20px;color:var(--mut)}
+  .lock .lk{font-size:40px}
+  .lock p{font-size:12.5px;margin-top:12px;line-height:1.6}
+  .newsrow{padding:13px 2px;border-bottom:1px solid var(--line)}
+  .newsrow .d{font-size:10.5px;color:var(--mut)}
+  .newsrow .h{font-size:13px;font-weight:700;margin-top:3px}
+  .mapbox{height:190px;border-radius:12px;background:linear-gradient(135deg,#dfe8f2,#eef3f8);display:flex;align-items:center;justify-content:center;color:#9aa7b5;font-size:13px;border:1px solid var(--line);margin-bottom:12px}
+
+  /* ===== admin ===== */
+  .admin{width:520px;background:#fff;border-radius:18px;box-shadow:0 16px 45px rgba(20,40,80,.10);overflow:hidden;align-self:stretch}
+  .admin-bar{background:#0f2540;color:#fff;padding:15px 20px;font-size:15px;font-weight:800;display:flex;align-items:center;gap:9px}
+  .admin-body{padding:22px}
+  .sec{margin-bottom:26px}
+  .sec h3{font-size:13px;font-weight:800;color:#0f2540;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .sec h3 .n{background:#eef2f7;color:#6b7785;width:22px;height:22px;border-radius:6px;font-size:11px;display:inline-flex;align-items:center;justify-content:center}
+  .drop{border:2px dashed #cdd6e2;border-radius:12px;padding:22px;text-align:center;color:#8a95a3;font-size:12.5px;cursor:pointer;background:#fafcff}
+  .drop.done{border-color:var(--g);background:#f2fdf6;color:var(--gd);font-weight:700}
+  .stat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+  .stat .b{background:#f6f8fb;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+  .stat .b .v{font-size:26px;font-weight:800;color:var(--g)}
+  .stat .b .l{font-size:11px;color:#6b7785;margin-top:2px}
+  .tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+  .tbl th,.tbl td{border-bottom:1px solid var(--line);padding:9px 6px;text-align:left}
+  .tbl th{color:var(--mut);font-size:11px}
+  .tbl .y{color:var(--gd);font-weight:800}
+  .tbl .no{color:#c0392b;font-weight:700}
+  .mini{background:#f4f7fb;border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;width:100%;margin-bottom:8px}
+  .rowg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .badge{display:inline-block;font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:99px;background:#e7f9ef;color:var(--gd);margin-left:6px}
+  .note{font-size:11px;color:var(--mut);line-height:1.6;margin-top:8px}
+  .hide{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lead">
+    <h1>守成クラブ ◯◯会場 公式LINE ― 動作モック</h1>
+    <p>実際にタップして動きます。※データはこのブラウザ上だけの仮のものです</p>
+  </div>
+  <div class="switch">
+    <button id="sw-mem" class="on" onclick="showSide('mem')">📱 会員が見る画面</button>
+    <button id="sw-adm" onclick="showSide('adm')">🖥️ 世話人の管理画面</button>
+  </div>
+
+  <div class="views">
+    <!-- ============ 会員側スマホ ============ -->
+    <div class="phone" id="side-mem">
+      <div class="notch"></div>
+      <div class="topbar">
+        <div class="back" id="backBtn" onclick="go('home')">‹</div>
+        <div class="avatar">🏛️</div>
+        <div><div class="t" id="barTitle">守成クラブ ◯◯会場</div><div class="s" id="barSub">公式アカウント</div></div>
+      </div>
+      <div class="screen" id="screen"></div>
+    </div>
+
+    <!-- ============ 管理画面 ============ -->
+    <div class="admin hide" id="side-adm">
+      <div class="admin-bar">🖥️ 世話人 管理画面</div>
+      <div class="admin-body">
+        <div class="sec">
+          <h3><span class="n">1</span>会員データの取り込み（本部CSV）</h3>
+          <div class="drop" id="drop" onclick="importCsv()">📄 会員名簿CSVをここにアップロード<br><span style="font-size:11px">（クリックで取り込みシミュレーション）</span></div>
+          <div class="note">本部から月1回届くCSVをアップすると、会員名簿と出欠の土台が更新されます。</div>
+        </div>
+
+        <div class="sec">
+          <h3><span class="n">2</span>例会を登録（＝年間スケジュールに自動反映）</h3>
+          <div class="rowg">
+            <input class="mini" id="ad-date" placeholder="開催日 例）2026-08-15">
+            <input class="mini" id="ad-place" placeholder="会場 例）◯◯ホテル 3F">
+          </div>
+          <input class="mini" id="ad-party" placeholder="懇親会 例）1F レストラン（会費5,000円）">
+          <button class="btn sub" onclick="addMeeting()">＋ この例会を追加</button>
+          <div class="note" id="ad-msg"></div>
+        </div>
+
+        <div class="sec">
+          <h3><span class="n">3</span>出欠・懇親会の集計（リアルタイム）</h3>
+          <div class="stat">
+            <div class="b"><div class="v" id="st-att">0</div><div class="l">例会 出席</div></div>
+            <div class="b"><div class="v" id="st-abs">0</div><div class="l">例会 欠席</div></div>
+            <div class="b"><div class="v" id="st-par">0</div><div class="l">懇親会 参加</div></div>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>会員</th><th>会社</th><th>例会</th><th>懇親会</th></tr></thead>
+            <tbody id="st-tbl"></tbody>
+          </table>
+          <button class="btn sub" style="margin-top:12px" onclick="alert('CSVを書き出しました（モック）')">⬇ 出欠をCSVで書き出し</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- 仮データ ----------
+const members = [
+  {no:'1024', name:'高瀬', co:'株式会社タカセ'},
+  {no:'1025', name:'山田 太郎', co:'山田電機工業'},
+  {no:'1026', name:'佐藤 花子', co:'佐藤会計事務所'},
+  {no:'1027', name:'鈴木 一郎', co:'鈴木建設'},
+];
+const meetings = [
+  {id:'m1', date:'2026年 8月15日(土) 18:30', place:'◯◯ホテル 3F 鶴の間', party:'1F レストラン（会費5,000円）'},
+  {id:'m2', date:'2026年 9月19日(土) 18:30', place:'◯◯ホテル 3F 鶴の間', party:'1F レストラン（会費5,000円）'},
+  {id:'m3', date:'2026年10月17日(土) 18:30', place:'△△会館 大ホール', party:'居酒屋 ◯◯（会費4,500円）'},
+];
+// state
+let auth = null;                 // ログイン中の会員
+const rsvp = {};                 // {meetingId: {mtg:'y'|'n', party:'y'|'n'}}
+let csvDone = false;
+
+// ---------- ルーティング ----------
+const titles = {
+  home:['守成クラブ ◯◯会場','公式アカウント'],
+  att:['例会の出欠登録',''], sch:['年間スケジュール',''], map:['会場マップ・アクセス',''],
+  mem:['会員名簿',''], news:['お知らせ',''], contact:['事務局へ問い合わせ','']
+};
+function go(v){
+  const bt=document.getElementById('backBtn');
+  bt.classList.toggle('show', v!=='home');
+  document.getElementById('barTitle').textContent=titles[v][0];
+  document.getElementById('barSub').textContent=titles[v][1];
+  render(v);
+}
+function render(v){
+  const s=document.getElementById('screen');
+  if(v==='home') return s.innerHTML=homeHTML();
+  if(v==='att')  return s.innerHTML=auth?attListHTML():authHTML();
+  if(v==='sch')  return s.innerHTML=schHTML();
+  if(v==='map')  return s.innerHTML=mapHTML();
+  if(v==='mem')  return s.innerHTML=auth?memHTML():lockHTML();
+  if(v==='news') return s.innerHTML=newsHTML();
+  if(v==='contact') return s.innerHTML=contactHTML();
+}
+
+// ---------- 各画面 ----------
+function homeHTML(){
+  return `<div class="chatbg"><div class="bubble">◯◯会場の公式LINEへようこそ！<br>下のメニュー <b>「例会の出欠登録」</b> から、毎月の出欠をワンタップで登録できます。</div></div>
+  <div class="menulabel">▼ メニュー</div>
+  <div class="rich">
+    <div class="tile hot" onclick="go('att')"><div class="ic">✅</div><div class="lb">例会の<br>出欠登録</div></div>
+    <div class="tile" onclick="go('sch')"><div class="ic">📅</div><div class="lb">年間<br>スケジュール</div></div>
+    <div class="tile" onclick="go('map')"><div class="ic">📍</div><div class="lb">会場マップ</div></div>
+    <div class="tile" onclick="go('mem')"><div class="ic">👥</div><div class="lb">会員名簿</div></div>
+    <div class="tile" onclick="go('news')"><div class="ic">📢</div><div class="lb">お知らせ</div></div>
+    <div class="tile" onclick="go('contact')"><div class="ic">💬</div><div class="lb">事務局へ<br>問い合わせ</div></div>
+  </div>`;
+}
+function authHTML(){
+  return `<div class="pad">
+    <div class="scr-title">初回だけ 会員確認</div>
+    <div class="scr-sub">LINEと会員情報をひも付けます。次回からは自動でログインされ、この画面はスキップされます。</div>
+    <div class="field"><label>会員番号</label><input id="in-no" placeholder="例）1024"></div>
+    <div class="field"><label>お名前</label><input id="in-nm" placeholder="例）高瀬"></div>
+    <button class="btn" onclick="doAuth()">この内容で確認する</button>
+    <div class="hint">※ 本部CSVの会員番号・氏名と照合します（モックは 1024 / 高瀬 で通ります）。LINE IDは自動で取得されるため入力不要です。</div>
+  </div>`;
+}
+function doAuth(){
+  const no=document.getElementById('in-no').value.trim();
+  const nm=document.getElementById('in-nm').value.trim();
+  let m=members.find(x=>x.no===no) || members[0];   // モックは緩め
+  auth=m;
+  go('att');
+}
+function attListHTML(){
+  let cards = meetings.map(m=>{
+    const r = rsvp[m.id]||{};
+    const y=v=>r.mtg===v?'pick-y':(r.mtg?'':'');
+    const py=v=>r.party===v?'pick-y':(r.party?'':'');
+    // 出席=緑, 欠席=グレー
+    const mtgY = r.mtg==='y'?'pick-y':'';
+    const mtgN = r.mtg==='n'?'pick-n':'';
+    const parY = r.party==='y'?'pick-y':'';
+    const parN = r.party==='n'?'pick-n':'';
+    return `<div class="card">
+      <div class="date">📅 ${m.date}</div>
+      <div class="meta">会場：${m.place}<br>懇親会：${m.party}</div>
+      <div class="seg-row"><span class="k">例会</span>
+        <div class="seg">
+          <button class="${mtgY}" onclick="setR('${m.id}','mtg','y')">出席</button>
+          <button class="${mtgN}" onclick="setR('${m.id}','mtg','n')">欠席</button>
+        </div>
+      </div>
+      <div class="seg-row"><span class="k">懇親会</span>
+        <div class="seg">
+          <button class="${parY}" onclick="setR('${m.id}','party','y')">参加</button>
+          <button class="${parN}" onclick="setR('${m.id}','party','n')">不参加</button>
+        </div>
+      </div>
+      <div class="saved ${(r.mtg||r.party)?'show':''}">✓ 登録しました（例会中でも変更できます）</div>
+    </div>`;
+  }).join('');
+  return `<div class="pad">
+    <div class="scr-title">こんにちは、${auth.name} さん</div>
+    <div class="scr-sub">参加する例会をワンタップで登録してください。あとから何度でも変更できます。</div>
+    ${cards}</div>`;
+}
+function setR(id,key,val){
+  rsvp[id]=rsvp[id]||{};
+  rsvp[id][key]=val;
+  render('att');       // 再描画
+  refreshAdmin();
+}
+function schHTML(){
+  let rows=meetings.map(m=>`<div class="card"><div class="date">📅 ${m.date}</div><div class="meta">会場：${m.place}<br>懇親会：${m.party}</div></div>`).join('');
+  return `<div class="pad"><div class="scr-title">年間スケジュール</div>
+    <div class="scr-sub">世話人が管理画面に登録した例会が、ここに自動で表示されます。</div>${rows}</div>`;
+}
+function mapHTML(){
+  return `<div class="pad"><div class="scr-title">会場マップ・アクセス</div>
+    <div class="scr-sub">◯◯ホテル 3F 鶴の間</div>
+    <div class="mapbox">🗺️ 地図（Googleマップ埋め込み）</div>
+    <div class="card"><div class="meta">〒060-0000 北海道◯◯市中央区◯◯1-2-3<br>地下鉄◯◯駅 徒歩5分／駐車場あり</div></div></div>`;
+}
+function memHTML(){
+  let rows=members.map(m=>`<div class="mrow"><div class="ava">${m.name.slice(0,1)}</div><div><div class="nm">${m.name}</div><div class="co">${m.co}（会員No.${m.no}）</div></div></div>`).join('');
+  return `<div class="pad"><div class="scr-title">会員名簿</div>
+    <div class="scr-sub">会員だけが閲覧できます。（本部CSVをもとに表示）</div>
+    <div class="mlist">${rows}</div></div>`;
+}
+function lockHTML(){
+  return `<div class="lock"><div class="lk">🔒</div><p>会員名簿は会員限定です。<br>先に「例会の出欠登録」から会員確認を済ませてください。</p>
+    <button class="btn sub" style="width:auto;padding:11px 22px;margin-top:16px" onclick="go('att')">会員確認へ</button></div>`;
+}
+function newsHTML(){
+  const n=[
+    {d:'2026.07.01',h:'8月例会の会場が決まりました'},
+    {d:'2026.06.20',h:'新入会員 3名をご紹介します'},
+    {d:'2026.06.05',h:'公式サイトをリニューアルしました'},
+  ];
+  return `<div class="pad"><div class="scr-title">お知らせ</div><div class="scr-sub">最新情報・公式サイトへのリンク</div>
+    ${n.map(x=>`<div class="newsrow"><div class="d">${x.d}</div><div class="h">${x.h}</div></div>`).join('')}</div>`;
+}
+function contactHTML(){
+  return `<div class="pad"><div class="scr-title">事務局へ問い合わせ</div>
+    <div class="scr-sub">ご不明な点はお気軽にどうぞ。</div>
+    <div class="field"><label>お問い合わせ内容</label><input placeholder="例）欠席の連絡について"></div>
+    <button class="btn" onclick="alert('送信しました（モック）')">送信する</button></div>`;
+}
+
+// ---------- 管理画面連動 ----------
+function refreshAdmin(){
+  let att=0,abs=0,par=0;
+  Object.values(rsvp).forEach(r=>{ if(r.mtg==='y')att++; if(r.mtg==='n')abs++; if(r.party==='y')par++; });
+  document.getElementById('st-att').textContent=att;
+  document.getElementById('st-abs').textContent=abs;
+  document.getElementById('st-par').textContent=par;
+  // 表：ログイン会員の登録状況を1行で（デモ）
+  const tb=document.getElementById('st-tbl');
+  let rows='';
+  const me=auth||members[0];
+  meetings.forEach(m=>{
+    const r=rsvp[m.id]; if(!r) return;
+    const mt = r.mtg==='y'?'<span class="y">出席</span>':(r.mtg==='n'?'<span class="no">欠席</span>':'—');
+    const pt = r.party==='y'?'<span class="y">参加</span>':(r.party==='n'?'不参加':'—');
+    rows+=`<tr><td>${me.name}</td><td>${me.co}</td><td>${mt}<br><span style="font-size:10px;color:#8a95a3">${m.date.slice(0,9)}</span></td><td>${pt}</td></tr>`;
+  });
+  tb.innerHTML=rows||`<tr><td colspan="4" style="color:#8a95a3;text-align:center;padding:16px">会員側で出欠を登録すると、ここに反映されます</td></tr>`;
+}
+function importCsv(){
+  csvDone=true;
+  const d=document.getElementById('drop');
+  d.classList.add('done');
+  d.innerHTML=`✓ 取り込み完了：会員 ${members.length} 名を登録しました`;
+}
+function addMeeting(){
+  const dt=document.getElementById('ad-date').value.trim();
+  const pl=document.getElementById('ad-place').value.trim();
+  const pa=document.getElementById('ad-party').value.trim();
+  if(!dt){document.getElementById('ad-msg').textContent='開催日を入力してください';return;}
+  meetings.push({id:'m'+(meetings.length+1),date:dt,place:pl||'（未定）',party:pa||'（未定）'});
+  document.getElementById('ad-msg').textContent='✓ 追加しました。会員側の「年間スケジュール」「出欠登録」に反映されます。';
+  document.getElementById('ad-date').value='';document.getElementById('ad-place').value='';document.getElementById('ad-party').value='';
+}
+function showSide(s){
+  document.getElementById('side-mem').classList.toggle('hide', s!=='mem');
+  document.getElementById('side-adm').classList.toggle('hide', s!=='adm');
+  document.getElementById('sw-mem').classList.toggle('on', s==='mem');
+  document.getElementById('sw-adm').classList.toggle('on', s==='adm');
+  if(s==='adm') refreshAdmin();
+}
+
+// init
+go('home');
+refreshAdmin();
+</script>
+</body>
+</html>

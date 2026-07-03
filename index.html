@@ -229,7 +229,7 @@
 <body>
 <div class="wrap">
   <div class="lead">
-    <h1>守成クラブ ◯◯会場 公式LINE ― 動作モック</h1>
+    <h1>守成クラブ 南会場 公式LINE ― 動作モック</h1>
     <p>実際にタップして動きます。※データはこのブラウザ上だけの仮のものです</p>
   </div>
   <div class="switch" role="tablist" aria-label="表示の切り替え">
@@ -251,7 +251,7 @@
       <div class="topbar">
         <div class="back" id="backBtn" role="button" tabindex="0" aria-label="前の画面に戻る" onclick="back()">‹</div>
         <div class="avatar" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-4 8 4v12"/><path d="M4 21h16"/><path d="M9.5 21v-5h5v5"/><path d="M8.5 11h1M14.5 11h1"/></svg></div>
-        <div><div class="t" id="barTitle">守成クラブ ◯◯会場</div><div class="s" id="barSub">公式アカウント</div></div>
+        <div><div class="t" id="barTitle">守成クラブ 南会場</div><div class="s" id="barSub">公式アカウント</div></div>
       </div>
       <div class="screen" id="screen" tabindex="-1"></div>
     </div>
@@ -332,7 +332,7 @@ let csvDone = false;
 
 // ---------- ルーティング ----------
 const titles = {
-  home:['守成クラブ ◯◯会場','公式アカウント'],
+  home:['守成クラブ 南会場','公式アカウント'],
   att:['例会の出欠登録',''], sch:['年間スケジュール',''], map:['会場マップ・アクセス',''],
   mem:['会員名簿',''], news:['お知らせ',''], contact:['事務局へ問い合わせ','']
 };
@@ -381,7 +381,7 @@ function render(v){
 // ---------- 各画面 ----------
 function homeHTML(){
   return `<div class="home">
-    <div class="chatbg"><div class="bubble">◯◯会場の公式LINEへようこそ！<br>下のメニュー <b>「例会の出欠登録」</b> から、毎月の出欠をワンタップで登録できます。</div></div>
+    <div class="chatbg"><div class="bubble">南会場の公式LINEへようこそ！<br>下のメニュー <b>「例会の出欠登録」</b> から、毎月の出欠をワンタップで登録できます。</div></div>
     <div class="richwrap">
       <div class="menulabel">▼ メニュー</div>
       <div class="rich">

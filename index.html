@@ -6,99 +6,224 @@
 <title>守成クラブ 公式LINE モック</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  :root{--g:#06C755;--gd:#05663b;--ink:#1f2933;--mut:#8a95a3;--line:#e6ebf2;--bg:#eef1f5}
-  body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;padding:26px 14px 60px}
+  :root{
+    --g:#06C755;          /* LINEグリーン（主導線・主ボタン・選択済のみ） */
+    --gd:#05B24C;         /* 押下 */
+    --g-face:#E8F8EF;     /* 淡グリーン面 */
+    --success:#1E9E5A;    /* 成功（文字） */
+    --danger:#C0392B;     /* 注意/欠席（文字） */
+    --danger-face:#FBECEA;/* 注意/欠席（面） */
+    --info:#2F6FB0;       /* 情報 */
+    --navy:#0F2540;       /* 管理画面/見出し */
+    --navy-face:#F5F7FB;  /* 淡ネイビー面 */
+    --ink:#1F2933;        /* 本文 */
+    --sub:#5A6675;        /* 副次テキスト（AA） */
+    --cap:#586372;        /* キャプション（白上5.3:1・灰面でもAA確保） */
+    --line:#E3E8EF;       /* 境界 */
+    --line2:#D5DCE6;      /* 強境界 */
+    --card:#FFFFFF;       /* 面（カード） */
+    --mem-bg:#F4F6F9;     /* 会員画面地 */
+    --app-bg:#EEF1F5;     /* アプリ余白 */
+    --chat:#8CABD9;       /* LINEチャット背景 */
+    --sh1:0 1px 2px rgba(16,24,40,.04);
+    --sh2:0 4px 12px rgba(16,24,40,.05);
+    /* 角丸スケール（8 / 12 / 16 の3段に統一） */
+    --r-sm:8px;
+    --r-md:12px;
+    --r-lg:16px;
+  }
+  body{
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif;
+    background:var(--app-bg);color:var(--ink);-webkit-font-smoothing:antialiased;
+    padding:24px 16px 64px;line-height:1.6;letter-spacing:.02em;overflow-x:hidden;
+  }
   .wrap{max-width:960px;margin:0 auto}
-  .lead{text-align:center;margin-bottom:22px}
-  .lead h1{font-size:19px;color:#0f2540;font-weight:800}
-  .lead p{font-size:12.5px;color:#6b7785;margin-top:5px}
-  .switch{display:flex;gap:8px;justify-content:center;margin:14px 0 26px}
-  .switch button{border:1.5px solid var(--line);background:#fff;color:#5a6775;font-weight:700;font-size:13px;padding:9px 20px;border-radius:99px;cursor:pointer}
+  .lead{text-align:center;margin-bottom:24px}
+  .lead h1{font-size:20px;line-height:1.4;color:var(--navy);font-weight:700;letter-spacing:.01em}
+  .lead p{font-size:13px;color:var(--sub);margin-top:8px;line-height:1.6}
+  .switch{display:flex;gap:8px;justify-content:center;margin:16px 0 24px}
+  .switch button{
+    border:1.5px solid var(--line2);background:#fff;color:var(--sub);
+    font-weight:700;font-size:13px;padding:10px 20px;border-radius:99px;cursor:pointer;
+    transition:background .15s,color .15s,border-color .15s;min-height:44px;
+  }
   .switch button.on{background:var(--g);border-color:var(--g);color:#fff}
-  .views{display:flex;gap:36px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+  .views{display:flex;gap:40px;justify-content:center;align-items:flex-start;flex-wrap:wrap}
 
   /* ===== phone ===== */
-  .phone{width:360px;background:#fff;border-radius:42px;border:12px solid #10151c;overflow:hidden;box-shadow:0 20px 55px rgba(10,20,40,.28);position:relative}
-  .notch{height:24px;background:#10151c}
-  .topbar{background:var(--g);color:#fff;padding:12px 14px;display:flex;align-items:center;gap:10px;min-height:58px}
-  .topbar .back{font-size:22px;cursor:pointer;width:22px;visibility:hidden}
+  .phone{
+    width:min(360px,100%);max-width:360px;background:#fff;border-radius:44px;border:12px solid #10151c;
+    overflow:hidden;box-shadow:0 24px 60px rgba(10,20,40,.30);position:relative;
+  }
+  /* 簡易ステータスバー（iOS風：白地＋ダーク文字） */
+  .statusbar{
+    background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:space-between;
+    padding:8px 20px 4px;font-size:13px;font-weight:700;letter-spacing:.02em;
+  }
+  .statusbar .sb-r{display:flex;align-items:center;gap:6px}
+  .statusbar svg{width:17px;height:17px;display:block;color:var(--ink)}
+  /* トークヘッダー（本物のLINE公式アカウント風：白地＋黒文字） */
+  .topbar{
+    background:#fff;color:var(--ink);border-bottom:1px solid var(--line);
+    padding:8px 12px 12px;display:flex;align-items:center;gap:8px;min-height:56px;
+  }
+  .topbar .back{
+    font-size:26px;line-height:1;cursor:pointer;width:44px;height:44px;flex:none;color:var(--ink);
+    display:flex;align-items:center;justify-content:center;visibility:hidden;border-radius:50%;
+    transition:background .12s;
+  }
+  .topbar .back:active{background:var(--app-bg)}
   .topbar .back.show{visibility:visible}
-  .topbar .avatar{width:34px;height:34px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:18px}
-  .topbar .t{font-size:15px;font-weight:700;line-height:1.2}
-  .topbar .s{font-size:10.5px;opacity:.9}
-  .screen{height:560px;overflow-y:auto;background:#f6f8fb}
+  .topbar .avatar{width:36px;height:36px;border-radius:50%;background:var(--navy-face);display:flex;align-items:center;justify-content:center;flex:none}
+  .topbar .avatar svg{width:22px;height:22px;color:var(--navy)}
+  .topbar .t{font-size:15px;font-weight:700;line-height:1.3;color:var(--navy)}
+  .topbar .s{font-size:12px;font-weight:400;color:var(--sub);line-height:1.3}
+  .screen{height:560px;overflow-y:auto;background:var(--mem-bg);outline:none}
   .pad{padding:16px}
 
-  /* home */
-  .chatbg{background:#8caadd;padding:16px 12px 20px}
-  .bubble{background:#fff;border-radius:4px 15px 15px 15px;padding:11px 13px;max-width:82%;font-size:12.5px;line-height:1.6;box-shadow:0 1px 2px rgba(0,0,0,.12)}
-  .bubble b{color:var(--gd)}
-  .menulabel{background:#f3f5f8;border-top:1px solid var(--line);font-size:10.5px;color:var(--mut);text-align:center;padding:6px 0;font-weight:700}
-  .rich{display:grid;grid-template-columns:repeat(3,1fr);background:#dfe4ec;gap:1.5px}
-  .tile{background:#fff;aspect-ratio:1/.9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:background .12s}
-  .tile:active{background:#eef7f1}
+  /* home（トーク背景＋最下部にドッキングしたリッチメニュー） */
+  .home{min-height:100%;display:flex;flex-direction:column}
+  .chatbg{background:var(--chat);padding:16px 16px 20px;flex:1 0 auto}
+  .bubble{
+    background:#fff;border-radius:4px 16px 16px 16px;padding:12px 14px;max-width:82%;
+    font-size:14px;line-height:1.6;box-shadow:var(--sh1);
+  }
+  .bubble b{color:var(--success);font-weight:700}
+  .richwrap{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);box-shadow:0 -2px 8px rgba(16,24,40,.05)}
+  .menulabel{font-size:12px;color:var(--sub);text-align:center;padding:8px 0 6px;font-weight:700;letter-spacing:.04em}
+  .rich{display:grid;grid-template-columns:repeat(3,1fr);background:var(--line);gap:1px;border-top:1px solid var(--line)}
+  .tile{
+    background:#fff;min-height:72px;aspect-ratio:1/.92;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:background .12s;
+  }
+  .tile:active{background:#F1F7F4}
   .tile.hot{background:var(--g)}
+  .tile.hot:active{background:var(--gd)}
   .tile.hot .ic,.tile.hot .lb{color:#fff}
-  .tile .ic{font-size:25px}
-  .tile .lb{font-size:11px;font-weight:700;text-align:center;line-height:1.25;color:#2c3742}
+  .tile .ic{color:#2C3742;line-height:1}
+  .tile .ic svg{width:24px;height:24px;display:block}
+  .tile .lb{font-size:12px;font-weight:700;text-align:center;line-height:1.3;color:#2C3742}
 
   /* generic screen */
-  .scr-title{font-size:16px;font-weight:800;color:#0f2540;margin-bottom:3px}
-  .scr-sub{font-size:11.5px;color:var(--mut);margin-bottom:16px;line-height:1.5}
-  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:13px;box-shadow:0 3px 10px rgba(20,40,80,.04)}
-  .card .date{font-size:13.5px;font-weight:800;color:#0f2540}
-  .card .meta{font-size:11.5px;color:#6b7785;margin-top:4px;line-height:1.6}
-  .seg-row{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
-  .seg-row .k{font-size:12px;font-weight:700;color:#3c4a58}
-  .seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
-  .seg button{border:none;background:#fff;font-size:12px;font-weight:700;color:#8a95a3;padding:7px 15px;cursor:pointer}
-  .seg button.pick-y{background:var(--g);color:#fff}
-  .seg button.pick-n{background:#eef1f5;color:#41505f}
-  .saved{margin-top:11px;font-size:11px;font-weight:800;color:var(--gd);background:#e7f9ef;padding:6px 10px;border-radius:8px;display:none}
-  .saved.show{display:block}
+  .scr-title{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px;letter-spacing:.01em}
+  .scr-sub{font-size:13px;font-weight:400;color:var(--sub);margin-bottom:16px;line-height:1.6}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;
+    margin-bottom:16px;box-shadow:var(--sh1),var(--sh2);
+  }
+  .card .date{font-size:15px;font-weight:700;color:var(--navy);letter-spacing:.01em;display:flex;align-items:center;gap:6px}
+  .card .date svg{width:16px;height:16px;color:var(--navy);flex:none}
+  .card .meta{font-size:13px;font-weight:400;color:var(--sub);margin-top:8px;line-height:1.6}
+  .seg-row{display:flex;align-items:center;justify-content:space-between;margin-top:16px;gap:12px}
+  .seg-row .k{font-size:13px;font-weight:700;color:var(--ink)}
+  .seg{display:flex;gap:8px}
+  .seg button{
+    border:1.5px solid var(--line2);background:#fff;font-size:13px;font-weight:700;color:var(--sub);
+    min-height:44px;padding:10px 16px;border-radius:var(--r-md);cursor:pointer;
+    transition:background .15s,color .15s,border-color .15s;
+  }
+  .seg button:active{background:#F1F3F6}
+  /* 出席・参加：グリーン塗り／欠席・不参加：赤系塗りで二重シグナル化 */
+  .seg button.pick-y{background:var(--g);color:#fff;border-color:var(--g)}
+  .seg button.pick-n{background:var(--danger-face);color:var(--danger);border-color:var(--danger)}
+  .saved{
+    margin-top:12px;font-size:13px;font-weight:700;color:var(--success);background:var(--g-face);
+    padding:8px 12px;border-radius:var(--r-sm);display:none;
+  }
+  .saved.show{display:block;animation:fadeIn .15s ease-out}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-2px)}to{opacity:1;transform:none}}
 
-  .field{margin-bottom:13px}
-  .field label{display:block;font-size:12px;font-weight:700;color:#3c4a58;margin-bottom:5px}
-  .field input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px;font-size:14px}
-  .btn{width:100%;background:var(--g);color:#fff;border:none;border-radius:11px;padding:13px;font-size:14px;font-weight:800;cursor:pointer}
-  .btn.sub{background:#fff;color:var(--gd);border:1.5px solid var(--g)}
-  .hint{font-size:11px;color:var(--mut);margin-top:10px;line-height:1.6}
+  .empty{
+    text-align:center;color:var(--sub);font-size:13px;line-height:1.6;padding:32px 16px;
+    border:1px dashed var(--line2);border-radius:var(--r-lg);background:#fff;
+  }
+  .empty .em-ic{font-size:32px;display:block;margin-bottom:12px}
 
-  .mlist .mrow{display:flex;align-items:center;gap:11px;padding:12px 4px;border-bottom:1px solid var(--line)}
-  .mlist .mrow .ava{width:38px;height:38px;border-radius:50%;background:#e7f9ef;color:var(--gd);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:none}
-  .mlist .mrow .nm{font-size:13px;font-weight:700}
-  .mlist .mrow .co{font-size:11px;color:var(--mut)}
-  .lock{text-align:center;padding:40px 20px;color:var(--mut)}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:8px}
+  .field input{
+    width:100%;height:48px;border:1.5px solid var(--line2);border-radius:var(--r-md);padding:0 14px;
+    font-size:16px;color:var(--ink);background:#fff;transition:border-color .12s,box-shadow .12s;
+  }
+  .field input::placeholder{color:var(--cap)}
+  .field input:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 3px rgba(6,199,85,.15)}
+  .btn{
+    width:100%;height:48px;background:var(--g);color:#fff;border:none;border-radius:var(--r-md);
+    font-size:14px;font-weight:700;cursor:pointer;transition:background .12s,transform .12s;
+  }
+  .btn:active{transform:translateY(1px);background:var(--gd)}
+  .btn:disabled,.btn[disabled]{background:#C7CED8;color:#fff;cursor:not-allowed;transform:none}
+  .btn.sub{background:#fff;color:var(--g);border:1.5px solid var(--g)}
+  .btn.sub:active{background:var(--g-face);transform:translateY(1px)}
+  .hint{font-size:12px;color:var(--cap);margin-top:12px;line-height:1.6}
+
+  .mlist .mrow{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+  .mlist .mrow .ava{width:40px;height:40px;border-radius:50%;background:var(--navy-face);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex:none}
+  .mlist .mrow .nm{font-size:14px;font-weight:700;color:var(--ink)}
+  .mlist .mrow .co{font-size:13px;font-weight:400;color:var(--sub);margin-top:2px}
+  .lock{text-align:center;padding:48px 24px;color:var(--sub)}
   .lock .lk{font-size:40px}
-  .lock p{font-size:12.5px;margin-top:12px;line-height:1.6}
-  .newsrow{padding:13px 2px;border-bottom:1px solid var(--line)}
-  .newsrow .d{font-size:10.5px;color:var(--mut)}
-  .newsrow .h{font-size:13px;font-weight:700;margin-top:3px}
-  .mapbox{height:190px;border-radius:12px;background:linear-gradient(135deg,#dfe8f2,#eef3f8);display:flex;align-items:center;justify-content:center;color:#9aa7b5;font-size:13px;border:1px solid var(--line);margin-bottom:12px}
+  .lock p{font-size:13px;margin-top:16px;line-height:1.6}
+  .newsrow{padding:16px 2px;border-bottom:1px solid var(--line)}
+  .newsrow .d{font-size:12px;color:var(--cap)}
+  .newsrow .h{font-size:14px;font-weight:700;color:var(--ink);margin-top:4px}
+  .mapbox{height:192px;border-radius:var(--r-md);background:linear-gradient(135deg,#E1E9F3,#EEF3F8);display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;color:var(--sub);font-size:13px;border:1px solid var(--line);margin-bottom:16px}
+  .mapbox svg{width:28px;height:28px;color:var(--sub)}
 
   /* ===== admin ===== */
-  .admin{width:520px;background:#fff;border-radius:18px;box-shadow:0 16px 45px rgba(20,40,80,.10);overflow:hidden;align-self:stretch}
-  .admin-bar{background:#0f2540;color:#fff;padding:15px 20px;font-size:15px;font-weight:800;display:flex;align-items:center;gap:9px}
-  .admin-body{padding:22px}
-  .sec{margin-bottom:26px}
-  .sec h3{font-size:13px;font-weight:800;color:#0f2540;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-  .sec h3 .n{background:#eef2f7;color:#6b7785;width:22px;height:22px;border-radius:6px;font-size:11px;display:inline-flex;align-items:center;justify-content:center}
-  .drop{border:2px dashed #cdd6e2;border-radius:12px;padding:22px;text-align:center;color:#8a95a3;font-size:12.5px;cursor:pointer;background:#fafcff}
-  .drop.done{border-color:var(--g);background:#f2fdf6;color:var(--gd);font-weight:700}
-  .stat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
-  .stat .b{background:#f6f8fb;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
-  .stat .b .v{font-size:26px;font-weight:800;color:var(--g)}
-  .stat .b .l{font-size:11px;color:#6b7785;margin-top:2px}
-  .tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
-  .tbl th,.tbl td{border-bottom:1px solid var(--line);padding:9px 6px;text-align:left}
-  .tbl th{color:var(--mut);font-size:11px}
-  .tbl .y{color:var(--gd);font-weight:800}
-  .tbl .no{color:#c0392b;font-weight:700}
-  .mini{background:#f4f7fb;border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;width:100%;margin-bottom:8px}
+  .admin{width:min(520px,100%);max-width:520px;background:#fff;border-radius:var(--r-lg);box-shadow:var(--sh1),var(--sh2);border:1px solid var(--line);overflow:hidden;align-self:stretch}
+  .admin-bar{background:var(--navy);color:#fff;padding:16px 24px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .admin-body{padding:24px}
+  .sec{margin-bottom:24px}
+  .sec:last-child{margin-bottom:0}
+  .sec h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px;letter-spacing:.01em}
+  .sec h3 .n{background:var(--navy-face);color:var(--navy);width:24px;height:24px;border-radius:var(--r-sm);font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex:none}
+  .drop{border:2px dashed var(--line2);border-radius:var(--r-md);padding:24px;text-align:center;color:var(--sub);font-size:13px;line-height:1.6;cursor:pointer;background:var(--navy-face);transition:border-color .12s,background .12s}
+  .drop:active{background:#EFF2F7}
+  .drop.done{border-color:var(--success);background:var(--g-face);color:var(--success);font-weight:700}
+  .mlabel{display:block;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px}
+  .stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+  .stat .b{background:var(--navy-face);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 8px;text-align:center}
+  .stat .b .v{font-size:28px;font-weight:800;line-height:1;letter-spacing:-.01em}
+  .stat .b .l{font-size:12px;color:var(--sub);margin-top:8px}
+  #st-att{color:var(--success)}
+  #st-abs{color:var(--danger)}
+  #st-par{color:var(--navy)}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:16px}
+  .tbl th,.tbl td{border-bottom:1px solid var(--line);padding:12px 8px;text-align:left;vertical-align:top;min-height:44px}
+  .tbl th{color:var(--sub);font-size:12px;font-weight:700}
+  .tbl .bg{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px}
+  .tbl .y{color:var(--success);background:var(--g-face)}
+  .tbl .no{color:var(--danger);background:var(--danger-face)}
+  .tbl .sub-date{font-size:12px;color:var(--cap);display:block;margin-top:4px;font-weight:400}
+  .mini{background:#fff;border:1.5px solid var(--line2);border-radius:var(--r-md);height:48px;padding:0 14px;font-size:16px;color:var(--ink);width:100%;margin-bottom:8px;transition:border-color .12s,box-shadow .12s}
+  .mini::placeholder{color:var(--cap)}
+  .mini:focus{outline:none;border-color:var(--g);box-shadow:0 0 0 3px rgba(6,199,85,.15)}
   .rowg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .badge{display:inline-block;font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:99px;background:#e7f9ef;color:var(--gd);margin-left:6px}
-  .note{font-size:11px;color:var(--mut);line-height:1.6;margin-top:8px}
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--g-face);color:var(--success);margin-left:8px}
+  .note{font-size:12px;color:var(--cap);line-height:1.6;margin-top:8px}
+  .note.err{color:var(--danger);font-weight:700}
+  .note.ok{color:var(--success);font-weight:700}
+
+  /* 状態：フォーカス可視・選択の非色シグナル・エラー */
+  :focus-visible{outline:2px solid var(--g);outline-offset:2px;border-radius:6px}
+  .tile:focus-visible{outline-offset:-2px}
+  .seg button.pick-y::before,.seg button.pick-n::before{content:"✓";font-weight:800;margin-right:5px}
+  .req{color:var(--danger);margin-left:4px;font-weight:700}
+  .auth-err{display:none;background:var(--danger-face);color:var(--danger);font-size:13px;font-weight:700;padding:10px 12px;border-radius:var(--r-sm);margin-bottom:12px;line-height:1.5}
+  .auth-err.show{display:block;animation:fadeIn .15s ease-out}
+  .input-err{border-color:var(--danger)!important;box-shadow:0 0 0 3px rgba(192,57,43,.15)!important}
   .hide{display:none!important}
+
+  /* レスポンシブ（iPhone幅で横スクロールを起こさない） */
+  @media(max-width:560px){
+    .views{gap:24px}
+    .admin-body{padding:16px}
+  }
+  @media(max-width:400px){
+    body{padding:24px 8px 64px}
+  }
 </style>
 </head>
 <body>
@@ -107,56 +232,67 @@
     <h1>守成クラブ ◯◯会場 公式LINE ― 動作モック</h1>
     <p>実際にタップして動きます。※データはこのブラウザ上だけの仮のものです</p>
   </div>
-  <div class="switch">
-    <button id="sw-mem" class="on" onclick="showSide('mem')">📱 会員が見る画面</button>
-    <button id="sw-adm" onclick="showSide('adm')">🖥️ 世話人の管理画面</button>
+  <div class="switch" role="tablist" aria-label="表示の切り替え">
+    <button id="sw-mem" class="on" role="tab" aria-selected="true" aria-controls="side-mem" onclick="showSide('mem')">📱 会員が見る画面</button>
+    <button id="sw-adm" role="tab" aria-selected="false" aria-controls="side-adm" onclick="showSide('adm')">🖥️ 世話人の管理画面</button>
   </div>
 
   <div class="views">
     <!-- ============ 会員側スマホ ============ -->
-    <div class="phone" id="side-mem">
-      <div class="notch"></div>
+    <div class="phone" id="side-mem" role="tabpanel" aria-labelledby="sw-mem">
+      <div class="statusbar">
+        <span>9:41</span>
+        <span class="sb-r">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-label="電波"><rect x="2.5" y="14" width="3" height="6" rx="1" fill="currentColor" stroke="none"/><rect x="7.5" y="10" width="3" height="10" rx="1" fill="currentColor" stroke="none"/><rect x="12.5" y="6" width="3" height="14" rx="1" fill="currentColor" stroke="none"/><rect x="17.5" y="2.5" width="3" height="17.5" rx="1" fill="currentColor" stroke="none"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-label="Wi-Fi"><path d="M2.5 8.5a15 15 0 0 1 19 0"/><path d="M5.5 12a10 10 0 0 1 13 0"/><path d="M8.5 15.4a5 5 0 0 1 7 0"/><circle cx="12" cy="18.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-label="電池"><rect x="2" y="7" width="18" height="10" rx="2.5"/><rect x="4" y="9" width="12" height="6" rx="1" fill="currentColor" stroke="none"/><path d="M22 10.5v3"/></svg>
+        </span>
+      </div>
       <div class="topbar">
-        <div class="back" id="backBtn" onclick="go('home')">‹</div>
-        <div class="avatar">🏛️</div>
+        <div class="back" id="backBtn" role="button" tabindex="0" aria-label="前の画面に戻る" onclick="back()">‹</div>
+        <div class="avatar" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-4 8 4v12"/><path d="M4 21h16"/><path d="M9.5 21v-5h5v5"/><path d="M8.5 11h1M14.5 11h1"/></svg></div>
         <div><div class="t" id="barTitle">守成クラブ ◯◯会場</div><div class="s" id="barSub">公式アカウント</div></div>
       </div>
-      <div class="screen" id="screen"></div>
+      <div class="screen" id="screen" tabindex="-1"></div>
     </div>
 
     <!-- ============ 管理画面 ============ -->
-    <div class="admin hide" id="side-adm">
+    <div class="admin hide" id="side-adm" role="tabpanel" aria-labelledby="sw-adm">
       <div class="admin-bar">🖥️ 世話人 管理画面</div>
       <div class="admin-body">
         <div class="sec">
           <h3><span class="n">1</span>会員データの取り込み（本部CSV）</h3>
-          <div class="drop" id="drop" onclick="importCsv()">📄 会員名簿CSVをここにアップロード<br><span style="font-size:11px">（クリックで取り込みシミュレーション）</span></div>
+          <div class="drop" id="drop" role="button" tabindex="0" aria-live="polite" onclick="importCsv()">📄 会員名簿CSVをここにアップロード<br><span style="font-size:12px;color:var(--cap)">（クリックで取り込みシミュレーション）</span></div>
           <div class="note">本部から月1回届くCSVをアップすると、会員名簿と出欠の土台が更新されます。</div>
         </div>
 
         <div class="sec">
           <h3><span class="n">2</span>例会を登録（＝年間スケジュールに自動反映）</h3>
           <div class="rowg">
-            <input class="mini" id="ad-date" placeholder="開催日 例）2026-08-15">
-            <input class="mini" id="ad-place" placeholder="会場 例）◯◯ホテル 3F">
+            <div><label class="mlabel" for="ad-date">開催日<span class="req" aria-hidden="true">*</span></label><input class="mini" id="ad-date" aria-required="true" oninput="clearMtgErr()" placeholder="例）2026-08-15"></div>
+            <div><label class="mlabel" for="ad-place">会場</label><input class="mini" id="ad-place" placeholder="例）◯◯ホテル 3F"></div>
           </div>
-          <input class="mini" id="ad-party" placeholder="懇親会 例）1F レストラン（会費5,000円）">
+          <label class="mlabel" for="ad-party">懇親会</label>
+          <input class="mini" id="ad-party" placeholder="例）1F レストラン（会費5,000円）">
           <button class="btn sub" onclick="addMeeting()">＋ この例会を追加</button>
-          <div class="note" id="ad-msg"></div>
+          <div class="note" id="ad-msg" role="status" aria-live="polite"></div>
         </div>
 
         <div class="sec">
           <h3><span class="n">3</span>出欠・懇親会の集計（リアルタイム）</h3>
-          <div class="stat">
+          <div class="stat" aria-live="polite">
             <div class="b"><div class="v" id="st-att">0</div><div class="l">例会 出席</div></div>
             <div class="b"><div class="v" id="st-abs">0</div><div class="l">例会 欠席</div></div>
             <div class="b"><div class="v" id="st-par">0</div><div class="l">懇親会 参加</div></div>
           </div>
-          <table class="tbl">
-            <thead><tr><th>会員</th><th>会社</th><th>例会</th><th>懇親会</th></tr></thead>
-            <tbody id="st-tbl"></tbody>
-          </table>
-          <button class="btn sub" style="margin-top:12px" onclick="alert('CSVを書き出しました（モック）')">⬇ 出欠をCSVで書き出し</button>
+          <div class="tbl-scroll">
+            <table class="tbl">
+              <thead><tr><th>会員</th><th>会社</th><th>例会</th><th>懇親会</th></tr></thead>
+              <tbody id="st-tbl"></tbody>
+            </table>
+          </div>
+          <button class="btn sub" style="margin-top:16px" onclick="exportCsv()">⬇ 出欠をCSVで書き出し</button>
+          <div class="saved" id="csv-msg" role="status" aria-live="polite" style="margin-top:12px"></div>
         </div>
       </div>
     </div>
@@ -164,6 +300,19 @@
 </div>
 
 <script>
+// ---------- 単色ラインアイコン（自己完結・currentColorで色反転対応） ----------
+const SVGA='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">';
+const ICON={
+  att : SVGA+'<rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 4.5h6v2.5H9z"/><path d="M8.5 13l2 2 4.2-4.2"/></svg>',
+  sch : SVGA+'<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 9.5h16"/><path d="M8.5 3v4M15.5 3v4"/></svg>',
+  map : SVGA+'<path d="M12 21s6.5-5.8 6.5-11a6.5 6.5 0 1 0-13 0C5.5 15.2 12 21 12 21z"/><circle cx="12" cy="10" r="2.4"/></svg>',
+  mem : SVGA+'<circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16.3 5.7a3 3 0 0 1 0 5.4"/><path d="M20 19a5.5 5.5 0 0 0-3-4.95"/></svg>',
+  news: SVGA+'<path d="M4 10v4h3l7 4V6l-7 4H4z"/><path d="M17.5 9.2a4 4 0 0 1 0 5.6"/></svg>',
+  chat: SVGA+'<path d="M20 15.5a2 2 0 0 1-2 2H9l-4 3.5V6a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2z"/><path d="M8.5 10.5h7M8.5 13.5h4"/></svg>',
+  calSm: SVGA+'<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 9.5h16"/><path d="M8.5 3v4M15.5 3v4"/></svg>',
+  mapBig: SVGA+'<path d="M9 4L4 6v14l5-2 6 2 5-2V4l-5 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>'
+};
+
 // ---------- 仮データ ----------
 const members = [
   {no:'1024', name:'高瀬', co:'株式会社タカセ'},
@@ -172,9 +321,9 @@ const members = [
   {no:'1027', name:'鈴木 一郎', co:'鈴木建設'},
 ];
 const meetings = [
-  {id:'m1', date:'2026年 8月15日(土) 18:30', place:'◯◯ホテル 3F 鶴の間', party:'1F レストラン（会費5,000円）'},
-  {id:'m2', date:'2026年 9月19日(土) 18:30', place:'◯◯ホテル 3F 鶴の間', party:'1F レストラン（会費5,000円）'},
-  {id:'m3', date:'2026年10月17日(土) 18:30', place:'△△会館 大ホール', party:'居酒屋 ◯◯（会費4,500円）'},
+  {id:'m1', date:'2026年 8月15日(土) 18:30', place:'ホテルライフォート札幌 2F', party:'1F レストラン（会費5,000円）'},
+  {id:'m2', date:'2026年 9月19日(土) 18:30', place:'ホテルライフォート札幌 2F', party:'1F レストラン（会費5,000円）'},
+  {id:'m3', date:'2026年10月17日(土) 18:30', place:'ホテルライフォート札幌 2F', party:'近隣の居酒屋（会費4,500円）'},
 ];
 // state
 let auth = null;                 // ログイン中の会員
@@ -187,13 +336,37 @@ const titles = {
   att:['例会の出欠登録',''], sch:['年間スケジュール',''], map:['会場マップ・アクセス',''],
   mem:['会員名簿',''], news:['お知らせ',''], contact:['事務局へ問い合わせ','']
 };
-function go(v){
+let view='home';           // 現在の画面
+const navStack=[];         // 遷移履歴（戻る用）
+let booted=false;          // 初期化後のみフォーカス移動する
+function applyView(v){
   const bt=document.getElementById('backBtn');
   bt.classList.toggle('show', v!=='home');
   document.getElementById('barTitle').textContent=titles[v][0];
   document.getElementById('barSub').textContent=titles[v][1];
   render(v);
+  // 画面総入れ替え後にフォーカスを取り戻す（キーボード/支援技術対策）
+  if(booted){
+    const sc=document.getElementById('screen');
+    if(sc&&sc.focus) sc.focus({preventScroll:true});
+  }
 }
+function go(v){
+  if(v!==view) navStack.push(view);   // 直前の画面を積む
+  view=v;
+  applyView(v);
+}
+function back(){
+  const prev=navStack.pop()||'home';  // 1つ前へ（なければホーム）
+  view=prev;
+  applyView(prev);
+}
+// role=button 要素（タイル・戻る）をキーボード操作可能に
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter'&&e.key!==' ')return;
+  const el=document.activeElement;
+  if(el&&el.getAttribute&&el.getAttribute('role')==='button'){e.preventDefault();el.click();}
+});
 function render(v){
   const s=document.getElementById('screen');
   if(v==='home') return s.innerHTML=homeHTML();
@@ -207,46 +380,76 @@ function render(v){
 
 // ---------- 各画面 ----------
 function homeHTML(){
-  return `<div class="chatbg"><div class="bubble">◯◯会場の公式LINEへようこそ！<br>下のメニュー <b>「例会の出欠登録」</b> から、毎月の出欠をワンタップで登録できます。</div></div>
-  <div class="menulabel">▼ メニュー</div>
-  <div class="rich">
-    <div class="tile hot" onclick="go('att')"><div class="ic">✅</div><div class="lb">例会の<br>出欠登録</div></div>
-    <div class="tile" onclick="go('sch')"><div class="ic">📅</div><div class="lb">年間<br>スケジュール</div></div>
-    <div class="tile" onclick="go('map')"><div class="ic">📍</div><div class="lb">会場マップ</div></div>
-    <div class="tile" onclick="go('mem')"><div class="ic">👥</div><div class="lb">会員名簿</div></div>
-    <div class="tile" onclick="go('news')"><div class="ic">📢</div><div class="lb">お知らせ</div></div>
-    <div class="tile" onclick="go('contact')"><div class="ic">💬</div><div class="lb">事務局へ<br>問い合わせ</div></div>
+  return `<div class="home">
+    <div class="chatbg"><div class="bubble">◯◯会場の公式LINEへようこそ！<br>下のメニュー <b>「例会の出欠登録」</b> から、毎月の出欠をワンタップで登録できます。</div></div>
+    <div class="richwrap">
+      <div class="menulabel">▼ メニュー</div>
+      <div class="rich">
+        <div class="tile hot" role="button" tabindex="0" aria-label="例会の出欠登録" onclick="go('att')"><div class="ic">${ICON.att}</div><div class="lb">例会の<br>出欠登録</div></div>
+        <div class="tile" role="button" tabindex="0" aria-label="年間スケジュール" onclick="go('sch')"><div class="ic">${ICON.sch}</div><div class="lb">年間<br>スケジュール</div></div>
+        <div class="tile" role="button" tabindex="0" aria-label="会場マップ" onclick="go('map')"><div class="ic">${ICON.map}</div><div class="lb">会場マップ</div></div>
+        <div class="tile" role="button" tabindex="0" aria-label="会員名簿" onclick="go('mem')"><div class="ic">${ICON.mem}</div><div class="lb">会員名簿</div></div>
+        <div class="tile" role="button" tabindex="0" aria-label="お知らせ" onclick="go('news')"><div class="ic">${ICON.news}</div><div class="lb">お知らせ</div></div>
+        <div class="tile" role="button" tabindex="0" aria-label="事務局へ問い合わせ" onclick="go('contact')"><div class="ic">${ICON.chat}</div><div class="lb">事務局へ<br>問い合わせ</div></div>
+      </div>
+    </div>
   </div>`;
 }
 function authHTML(){
   return `<div class="pad">
     <div class="scr-title">初回だけ 会員確認</div>
     <div class="scr-sub">LINEと会員情報をひも付けます。次回からは自動でログインされ、この画面はスキップされます。</div>
-    <div class="field"><label>会員番号</label><input id="in-no" placeholder="例）1024"></div>
-    <div class="field"><label>お名前</label><input id="in-nm" placeholder="例）高瀬"></div>
-    <button class="btn" onclick="doAuth()">この内容で確認する</button>
+    <div class="auth-err" id="auth-err" role="alert"></div>
+    <div class="field"><label for="in-no">会員番号<span class="req">*</span></label><input id="in-no" inputmode="numeric" placeholder="例）1024" oninput="chkAuth()"></div>
+    <div class="field"><label for="in-nm">お名前<span class="req">*</span></label><input id="in-nm" placeholder="例）高瀬" oninput="chkAuth()"></div>
+    <button class="btn" id="authBtn" disabled onclick="doAuth()">この内容で確認する</button>
     <div class="hint">※ 本部CSVの会員番号・氏名と照合します（モックは 1024 / 高瀬 で通ります）。LINE IDは自動で取得されるため入力不要です。</div>
   </div>`;
+}
+function chkAuth(){
+  const no=document.getElementById('in-no').value.trim();
+  const nm=document.getElementById('in-nm').value.trim();
+  const b=document.getElementById('authBtn');
+  if(b) b.disabled=!(no&&nm);
+  // 入力し直したらエラー表示を解除
+  const err=document.getElementById('auth-err');
+  if(err){err.classList.remove('show');}
+  document.getElementById('in-no').classList.remove('input-err');
+  document.getElementById('in-nm').classList.remove('input-err');
 }
 function doAuth(){
   const no=document.getElementById('in-no').value.trim();
   const nm=document.getElementById('in-nm').value.trim();
-  let m=members.find(x=>x.no===no) || members[0];   // モックは緩め
+  // 会員番号と氏名の両方が一致した場合のみ通す（不一致は先へ進めない）
+  const m=members.find(x=>x.no===no && x.name===nm);
+  if(!m){
+    const err=document.getElementById('auth-err');
+    err.textContent='会員番号またはお名前が一致しません。本部からの会員情報をご確認ください。';
+    err.classList.add('show');
+    document.getElementById('in-no').classList.add('input-err');
+    document.getElementById('in-nm').classList.add('input-err');
+    return;
+  }
   auth=m;
   go('att');
 }
 function attListHTML(){
+  if(!meetings.length){
+    return `<div class="pad">
+      <div class="scr-title">こんにちは、${auth.name} さん</div>
+      <div class="scr-sub">参加する例会をワンタップで登録してください。あとから何度でも変更できます。</div>
+      <div class="empty"><span class="em-ic">🗓️</span>現在、登録された例会はありません。<br>世話人が例会を登録するとここに表示されます。</div>
+    </div>`;
+  }
   let cards = meetings.map(m=>{
     const r = rsvp[m.id]||{};
-    const y=v=>r.mtg===v?'pick-y':(r.mtg?'':'');
-    const py=v=>r.party===v?'pick-y':(r.party?'':'');
-    // 出席=緑, 欠席=グレー
+    // 出席=緑, 欠席=赤系
     const mtgY = r.mtg==='y'?'pick-y':'';
     const mtgN = r.mtg==='n'?'pick-n':'';
     const parY = r.party==='y'?'pick-y':'';
     const parN = r.party==='n'?'pick-n':'';
     return `<div class="card">
-      <div class="date">📅 ${m.date}</div>
+      <div class="date">${ICON.calSm} ${m.date}</div>
       <div class="meta">会場：${m.place}<br>懇親会：${m.party}</div>
       <div class="seg-row"><span class="k">例会</span>
         <div class="seg">
@@ -260,7 +463,7 @@ function attListHTML(){
           <button class="${parN}" onclick="setR('${m.id}','party','n')">不参加</button>
         </div>
       </div>
-      <div class="saved ${(r.mtg||r.party)?'show':''}">✓ 登録しました（例会中でも変更できます）</div>
+      <div class="saved ${(r.mtg||r.party)?'show':''}" role="status" aria-live="polite">✓ 登録しました（いつでも変更できます）</div>
     </div>`;
   }).join('');
   return `<div class="pad">
@@ -275,15 +478,20 @@ function setR(id,key,val){
   refreshAdmin();
 }
 function schHTML(){
-  let rows=meetings.map(m=>`<div class="card"><div class="date">📅 ${m.date}</div><div class="meta">会場：${m.place}<br>懇親会：${m.party}</div></div>`).join('');
+  if(!meetings.length){
+    return `<div class="pad"><div class="scr-title">年間スケジュール</div>
+      <div class="scr-sub">世話人が管理画面に登録した例会が、ここに自動で表示されます。</div>
+      <div class="empty"><span class="em-ic">🗓️</span>登録された例会はまだありません。</div></div>`;
+  }
+  let rows=meetings.map(m=>`<div class="card"><div class="date">${ICON.calSm} ${m.date}</div><div class="meta">会場：${m.place}<br>懇親会：${m.party}</div></div>`).join('');
   return `<div class="pad"><div class="scr-title">年間スケジュール</div>
     <div class="scr-sub">世話人が管理画面に登録した例会が、ここに自動で表示されます。</div>${rows}</div>`;
 }
 function mapHTML(){
   return `<div class="pad"><div class="scr-title">会場マップ・アクセス</div>
-    <div class="scr-sub">◯◯ホテル 3F 鶴の間</div>
-    <div class="mapbox">🗺️ 地図（Googleマップ埋め込み）</div>
-    <div class="card"><div class="meta">〒060-0000 北海道◯◯市中央区◯◯1-2-3<br>地下鉄◯◯駅 徒歩5分／駐車場あり</div></div></div>`;
+    <div class="scr-sub">ホテルライフォート札幌</div>
+    <div class="mapbox">${ICON.mapBig}<span>地図（Googleマップ埋め込み）</span></div>
+    <div class="card"><div class="meta">〒064-0804 北海道札幌市中央区南10条西1丁目1-30<br>地下鉄南北線「中島公園駅」1番出口 徒歩3分／駐車場あり</div></div></div>`;
 }
 function memHTML(){
   let rows=members.map(m=>`<div class="mrow"><div class="ava">${m.name.slice(0,1)}</div><div><div class="nm">${m.name}</div><div class="co">${m.co}（会員No.${m.no}）</div></div></div>`).join('');
@@ -293,7 +501,7 @@ function memHTML(){
 }
 function lockHTML(){
   return `<div class="lock"><div class="lk">🔒</div><p>会員名簿は会員限定です。<br>先に「例会の出欠登録」から会員確認を済ませてください。</p>
-    <button class="btn sub" style="width:auto;padding:11px 22px;margin-top:16px" onclick="go('att')">会員確認へ</button></div>`;
+    <button class="btn sub" style="width:auto;padding:0 24px;margin-top:16px" onclick="go('att')">会員確認へ</button></div>`;
 }
 function newsHTML(){
   const n=[
@@ -307,8 +515,21 @@ function newsHTML(){
 function contactHTML(){
   return `<div class="pad"><div class="scr-title">事務局へ問い合わせ</div>
     <div class="scr-sub">ご不明な点はお気軽にどうぞ。</div>
-    <div class="field"><label>お問い合わせ内容</label><input placeholder="例）欠席の連絡について"></div>
-    <button class="btn" onclick="alert('送信しました（モック）')">送信する</button></div>`;
+    <div class="field"><label for="contact-in">お問い合わせ内容</label><input id="contact-in" placeholder="例）欠席の連絡について"></div>
+    <button class="btn" onclick="sendContact()">送信する</button>
+    <div class="saved" id="contact-msg" role="status" aria-live="polite" style="margin-top:12px"></div></div>`;
+}
+function sendContact(){
+  const msg=document.getElementById('contact-msg');
+  if(!msg)return;
+  msg.textContent='✓ 送信しました。事務局より折り返しご連絡します（モック）';
+  msg.classList.add('show');
+}
+function exportCsv(){
+  const msg=document.getElementById('csv-msg');
+  if(!msg)return;
+  msg.textContent='✓ 出欠をCSVで書き出しました（モック）';
+  msg.classList.add('show');
 }
 
 // ---------- 管理画面連動 ----------
@@ -324,11 +545,12 @@ function refreshAdmin(){
   const me=auth||members[0];
   meetings.forEach(m=>{
     const r=rsvp[m.id]; if(!r) return;
-    const mt = r.mtg==='y'?'<span class="y">出席</span>':(r.mtg==='n'?'<span class="no">欠席</span>':'—');
-    const pt = r.party==='y'?'<span class="y">参加</span>':(r.party==='n'?'不参加':'—');
-    rows+=`<tr><td>${me.name}</td><td>${me.co}</td><td>${mt}<br><span style="font-size:10px;color:#8a95a3">${m.date.slice(0,9)}</span></td><td>${pt}</td></tr>`;
+    const mt = r.mtg==='y'?'<span class="bg y">出席</span>':(r.mtg==='n'?'<span class="bg no">欠席</span>':'—');
+    const pt = r.party==='y'?'<span class="bg y">参加</span>':(r.party==='n'?'<span class="bg no">不参加</span>':'—');
+    const shortDate=(m.date.match(/\d+月\d+日/)||[m.date])[0];  // 「8月15日」等を正しく抽出（途中欠け防止）
+    rows+=`<tr><td>${me.name}</td><td>${me.co}</td><td>${mt}<span class="sub-date">${shortDate}</span></td><td>${pt}</td></tr>`;
   });
-  tb.innerHTML=rows||`<tr><td colspan="4" style="color:#8a95a3;text-align:center;padding:16px">会員側で出欠を登録すると、ここに反映されます</td></tr>`;
+  tb.innerHTML=rows||`<tr><td colspan="4" style="color:var(--sub);text-align:center;padding:24px 16px">会員側で出欠を登録すると、ここに反映されます</td></tr>`;
 }
 function importCsv(){
   csvDone=true;
@@ -336,26 +558,50 @@ function importCsv(){
   d.classList.add('done');
   d.innerHTML=`✓ 取り込み完了：会員 ${members.length} 名を登録しました`;
 }
+function clearMtgErr(){
+  document.getElementById('ad-date').classList.remove('input-err');
+  const msg=document.getElementById('ad-msg');
+  if(msg&&msg.classList.contains('err')){msg.textContent='';msg.className='note';msg.setAttribute('aria-live','polite');}
+}
 function addMeeting(){
   const dt=document.getElementById('ad-date').value.trim();
   const pl=document.getElementById('ad-place').value.trim();
   const pa=document.getElementById('ad-party').value.trim();
-  if(!dt){document.getElementById('ad-msg').textContent='開催日を入力してください';return;}
+  const msg=document.getElementById('ad-msg');
+  if(!dt){
+    // エラーとして明確に伝える（赤系・assertive・入力枠強調・フォーカス誘導）
+    msg.textContent='開催日を入力してください。';
+    msg.className='note err';
+    msg.setAttribute('aria-live','assertive');
+    const dd=document.getElementById('ad-date');
+    dd.classList.add('input-err');
+    dd.focus();
+    return;
+  }
   meetings.push({id:'m'+(meetings.length+1),date:dt,place:pl||'（未定）',party:pa||'（未定）'});
-  document.getElementById('ad-msg').textContent='✓ 追加しました。会員側の「年間スケジュール」「出欠登録」に反映されます。';
+  msg.textContent='✓ 追加しました。会員側の「年間スケジュール」「出欠登録」に反映されます。';
+  msg.className='note ok';
+  msg.setAttribute('aria-live','polite');
+  document.getElementById('ad-date').classList.remove('input-err');
   document.getElementById('ad-date').value='';document.getElementById('ad-place').value='';document.getElementById('ad-party').value='';
+  // 会員側を表示中なら即時反映（表示鮮度の担保）
+  if(!document.getElementById('side-mem').classList.contains('hide')) render(view);
 }
 function showSide(s){
   document.getElementById('side-mem').classList.toggle('hide', s!=='mem');
   document.getElementById('side-adm').classList.toggle('hide', s!=='adm');
   document.getElementById('sw-mem').classList.toggle('on', s==='mem');
   document.getElementById('sw-adm').classList.toggle('on', s==='adm');
+  document.getElementById('sw-mem').setAttribute('aria-selected', s==='mem');
+  document.getElementById('sw-adm').setAttribute('aria-selected', s==='adm');
+  if(s==='mem') render(view);   // 管理画面で追加した例会などを会員側へ反映
   if(s==='adm') refreshAdmin();
 }
 
 // init
 go('home');
 refreshAdmin();
+booted=true;   // 以降の画面遷移でフォーカスを#screenへ移す
 </script>
 </body>
 </html>
